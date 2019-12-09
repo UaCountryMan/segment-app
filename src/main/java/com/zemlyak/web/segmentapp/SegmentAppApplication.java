@@ -45,7 +45,8 @@ public class SegmentAppApplication  {
 	@GetMapping(path = "/segments/stats")
 	public List<CountryStat> segmentStats(@RequestParam(value = "dataProviderId", required = false) Integer dataProviderId,
 										  @RequestParam(value = "typeId", required = false) Integer typeId,
-										  @RequestParam(value = "searchType", required = false) String searchType) {
+										  @RequestParam(value = "searchType", required = false) String searchType,
+										  @RequestParam(value = "search", required = false) String search) {
 
 		boolean hasFilter = false;
 		CountryStatsRepository.SpecificationBuilder conditionBuilder = conditionBuilder();
@@ -60,6 +61,10 @@ public class SegmentAppApplication  {
 		if (searchType != null) {
 			hasFilter = true;
 			conditionBuilder.likeType(searchType);
+		}
+		if (search != null) {
+			hasFilter = true;
+			conditionBuilder.hasSubstrInAnyName(search);
 		}
 
 		if (hasFilter) {

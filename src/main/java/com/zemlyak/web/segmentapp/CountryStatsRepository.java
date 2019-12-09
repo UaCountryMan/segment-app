@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 import java.util.List;
 
 public interface CountryStatsRepository extends JpaRepository<CountryStat, CountryStat.Key>, JpaSpecificationExecutor<CountryStat> {
@@ -47,6 +49,25 @@ public interface CountryStatsRepository extends JpaRepository<CountryStat, Count
 
         public SpecificationBuilder likeType(String searchedType) {
             specification = specification.and((statsRoot, cq, cb) -> cb.like(statsRoot.get(CountryStat_.segment).get(Segment_.segmentType).get(SegmentType_.name), "%" + searchedType + "%"));
+            return this;
+        }
+
+        public SpecificationBuilder hasSubstrInAnyName(String searchedPart) {
+            specification = specification
+                .and((statsRoot, cq, cb) -> {
+                    Expression<String> dataProviderName = cb.concat(statsRoot
+                        .get(CountryStat_.segment)
+                        .get(Segment_.dataProvider)
+                        .get(DataProvider_.name), " > ");
+                    Expression<String> typeViewName = cb.concat(statsRoot
+                        .get(CountryStat_.segment)
+                        .get(Segment_.segmentType)
+                        .get(SegmentType_.viewName), " > ");
+                    Path<String> segmentName = statsRoot
+                        .get(CountryStat_.segment)
+                        .get(Segment_.name);
+                    return cb.like(cb.concat(cb.concat(dataProviderName, typeViewName), segmentName), "%" + searchedPart + "%");
+                });
             return this;
         }
 
