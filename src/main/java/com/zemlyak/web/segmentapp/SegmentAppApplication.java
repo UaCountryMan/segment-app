@@ -1,7 +1,7 @@
 package com.zemlyak.web.segmentapp;
 
 import com.zemlyak.web.segmentapp.model.CountryStat;
-import com.zemlyak.web.segmentapp.model.Segment;
+import com.zemlyak.web.segmentapp.model2.Segment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,12 +31,12 @@ public class SegmentAppApplication  {
 		return segmentRepository.findById(id).orElse(null);
 	}
 
-	@GetMapping(path = "/segments/type/{id}")
-	public List<Segment> findSegmentByTypeId(@PathVariable("id") Integer typeId) {
-		return segmentRepository.findByType(typeId);
-	}
+	@GetMapping(path = "/segments")
+	public List<Segment> findSegment() {
+		return segmentRepository.findAll(SegmentRepository.withCountryStat(""));
+    }
 
-	@GetMapping(path = "/segments/type2/{id}")
+    @GetMapping(path = "/segments/type2/{id}")
 	public List<Segment> findSegmentByType2Id(@PathVariable("id") Integer typeId) {
 		return segmentRepository.findAll(SegmentRepository.hasType(typeId));
 	}
