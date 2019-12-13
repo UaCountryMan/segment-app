@@ -16,10 +16,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
+import java.util.Objects;
 
 public interface CountryStatsRepository extends JpaRepository<CountryStat, CountryStat.Key>, JpaSpecificationExecutor<CountryStat> {
 
@@ -35,12 +38,7 @@ public interface CountryStatsRepository extends JpaRepository<CountryStat, Count
         private Specification<CountryStat> specification;
 
         private SpecificationBuilder(String country) {
-            specification = (statsRoot, cq, cb) -> {
-//                Join<CountryStat, Segment> segmentJoin = statsRoot.join(CountryStat_.segment, JoinType.LEFT);
-//                Join<Segment, DataProvider> dataProviderJoin = segmentJoin.join(Segment_.dataProvider, JoinType.LEFT);
-//                Join<Segment, SegmentType> segmentTypeJoin = segmentJoin.join(Segment_.segmentType, JoinType.LEFT);
-                return cb.equal(statsRoot.get(CountryStat_.countryCode), country);
-            };
+            specification = (statsRoot, cq, cb) -> cb.equal(statsRoot.get(CountryStat_.countryCode), country);
         }
 
         public static SpecificationBuilder forCountry(String country) {
@@ -59,8 +57,8 @@ public interface CountryStatsRepository extends JpaRepository<CountryStat, Count
 
         public SpecificationBuilder likeType(String searchedType) {
             specification = specification.and((statsRoot, cq, cb) -> {
-                Join<CountryStat, Segment> segmentJoin = statsRoot.join(CountryStat_.segment, JoinType.LEFT);
-                Join<Segment, SegmentType> segmentTypeJoin = segmentJoin.join(Segment_.segmentType, JoinType.LEFT);
+                Join<CountryStat, Segment> segmentJoin = join(statsRoot, CountryStat_.segment);
+                Join<Segment, SegmentType> segmentTypeJoin = join(segmentJoin, Segment_.segmentType);
                 return cb.like(segmentTypeJoin.get(SegmentType_.name), "%" + searchedType + "%");
             });
             return this;
@@ -69,9 +67,9 @@ public interface CountryStatsRepository extends JpaRepository<CountryStat, Count
         public SpecificationBuilder hasSubstrInAnyName(String searchedPart) {
             specification = specification
                 .and((statsRoot, cq, cb) -> {
-                    Join<CountryStat, Segment> segmentJoin = statsRoot.join(CountryStat_.segment, JoinType.LEFT);
-                    Join<Segment, DataProvider> dataProviderJoin = segmentJoin.join(Segment_.dataProvider, JoinType.LEFT);
-                    Join<Segment, SegmentType> segmentTypeJoin = segmentJoin.join(Segment_.segmentType, JoinType.LEFT);
+                    Join<CountryStat, Segment> segmentJoin = join(statsRoot, CountryStat_.segment);
+                    Join<Segment, DataProvider> dataProviderJoin = join(segmentJoin, Segment_.dataProvider);
+                    Join<Segment, SegmentType> segmentTypeJoin = join(segmentJoin, Segment_.segmentType);
                     Expression<String> dataProviderName = cb.concat(dataProviderJoin
                         .get(DataProvider_.name), " > ");
                     Expression<String> typeViewName = cb.concat(segmentTypeJoin
@@ -85,6 +83,17 @@ public interface CountryStatsRepository extends JpaRepository<CountryStat, Count
 
         public Specification<CountryStat> build() {
             return specification;
+        }
+
+        @SuppressWarnings("unchecked")
+        private static <J,T> Join<J, T> join(From<?, J> from, SingularAttribute<J, T> attribute) {
+            return from
+                .getJoins()
+                .stream()
+                .filter(join -> Objects.equals(join.getAttribute(), attribute))
+                .map(o -> (Join<J, T>)o)
+                .findFirst()
+                .orElseGet(() -> from.join(attribute, JoinType.LEFT));
         }
     }
 }
