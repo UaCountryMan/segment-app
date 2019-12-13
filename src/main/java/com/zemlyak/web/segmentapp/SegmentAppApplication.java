@@ -33,7 +33,10 @@ public class SegmentAppApplication  {
 
 	@GetMapping(path = "/segments")
 	public List<Segment> findSegment() {
-		return segmentRepository.findAll(SegmentRepository.withCountryStat(""));
+		return segmentRepository
+			.findAll(SegmentRepository
+				.withCountryStat("")
+				.and(SegmentRepository.hasType(1)));
     }
 
     @GetMapping(path = "/segments/type2/{id}")

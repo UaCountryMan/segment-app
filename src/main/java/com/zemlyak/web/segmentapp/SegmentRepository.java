@@ -29,11 +29,7 @@ public interface SegmentRepository extends JpaRepository<Segment, Integer>, JpaS
     List<Segment> findAll(Specification<Segment> specification);
 
     static Specification<Segment> hasType(Integer typeId) {
-        return (segmentRoot, cq, cb) -> {
-            segmentRoot.fetch(Segment_.segmentType);
-            segmentRoot.fetch(Segment_.dataProvider);
-            return cb.equal(segmentRoot.get(Segment_.segmentType).get(SegmentType_.id), typeId);
-        };
+        return (segmentRoot, cq, cb) -> cb.equal(segmentRoot.get(Segment_.segmentType).get(SegmentType_.id), typeId);
     }
 
     static Specification<Segment> withCountryStat(String countryId) {
