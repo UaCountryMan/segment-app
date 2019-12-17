@@ -1,11 +1,15 @@
 package com.zemlyak.web.segmentapp;
 
 import com.zemlyak.web.segmentapp.model.CountryStat;
+import com.zemlyak.web.segmentapp.model.CountryStat_;
+import com.zemlyak.web.segmentapp.model.Segment_;
 import com.zemlyak.web.segmentapp.model2.Segment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,7 +78,7 @@ public class SegmentAppApplication  {
 			return statsRepository.findAll(conditionBuilder.build());
 		} else {
 			return statsRepository
-				.findAll(conditionBuilder.build(), PageRequest.of(0, 2))
+				.findAll(conditionBuilder.build(), PageRequest.of(0, 2, new JpaSort(Sort.Direction.ASC, JpaSort.path(CountryStat_.segment).dot(Segment_.id))))
 				.getContent();
 		}
 	}

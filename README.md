@@ -204,3 +204,96 @@ And return:
    }
 ]
 ```
+
+### Ordering:
+
+Request 
+`http://localhost:8080/segments/stats`
+
+Will generate SQL:
+```sql
+    select
+        countrysta0_.country_code as country_1_0_0_,
+        countrysta0_.segment_id as segment_2_0_0_,
+        segment1_.id as id1_3_1_,
+        dataprovid2_.id as id1_1_2_,
+        segmenttyp3_.id as id1_2_3_,
+        countrysta0_.active_profiles_amount as active_p3_0_0_,
+        countrysta0_.sleeping_profiles_amount as sleeping4_0_0_,
+        segment1_.is_active as is_activ2_3_1_,
+        segment1_.data_provider as data_pro4_3_1_,
+        segment1_.name as name3_3_1_,
+        segment1_.type_id as type_id5_3_1_,
+        dataprovid2_.name as name2_1_2_,
+        segmenttyp3_.name as name2_2_3_,
+        segmenttyp3_.view_name as view_nam3_2_3_ 
+    from
+        country_stats countrysta0_ 
+    left outer join
+        segments segment1_ 
+            on countrysta0_.segment_id=segment1_.id 
+    left outer join
+        data_providers dataprovid2_ 
+            on segment1_.data_provider=dataprovid2_.id 
+    left outer join
+        segment_types segmenttyp3_ 
+            on segment1_.type_id=segmenttyp3_.id 
+    where
+        countrysta0_.country_code=? 
+    order by
+        segment1_.id asc limit ?;
+
+
+    select
+        count(*) as col_0_0_ 
+    from
+        country_stats countrysta0_ 
+    where
+        countrysta0_.country_code=?;
+```
+
+And return:
+```json
+[
+   {
+      "segmentId":1,
+      "countryCode":"",
+      "activeProfilesAmount":null,
+      "sleepingProfilesAmount":null,
+      "segment":{
+         "id":1,
+         "name":"Segment1",
+         "active":null,
+         "dataProvider":{
+            "id":2,
+            "name":"Looe"
+         },
+         "segmentType":{
+            "id":3,
+            "name":"audience",
+            "viewName":"Audience"
+         }
+      }
+   },
+   {
+      "segmentId":2,
+      "countryCode":"",
+      "activeProfilesAmount":null,
+      "sleepingProfilesAmount":null,
+      "segment":{
+         "id":2,
+         "name":"Segment2",
+         "active":null,
+         "dataProvider":{
+            "id":1,
+            "name":"Spring"
+         },
+         "segmentType":{
+            "id":1,
+            "name":"brand",
+            "viewName":"Brand"
+         }
+      }
+   }
+]
+```
