@@ -297,3 +297,34 @@ And return:
    }
 ]
 ```
+
+### Projection
+
+Projection DTO
+
+```java
+@Value
+public class SegmentProjection {
+    private final Integer id;
+    private final String name;
+}
+```
+
+Repository method
+
+```java
+public interface SegmentRepository extends JpaRepository<Segment, Integer> {
+    List<SegmentProjection> findByNameLike(String name);
+}
+```
+
+Query
+```sql
+    select
+        segment0_.id as col_0_0_,
+        segment0_.name as col_1_0_ 
+    from
+        segments segment0_ 
+    where
+        segment0_.name like ? escape ?
+```

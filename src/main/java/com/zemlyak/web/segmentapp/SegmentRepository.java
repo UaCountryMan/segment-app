@@ -1,5 +1,6 @@
 package com.zemlyak.web.segmentapp;
 
+import com.zemlyak.web.segmentapp.model.SegmentProjection;
 import com.zemlyak.web.segmentapp.model2.CountryStat;
 import com.zemlyak.web.segmentapp.model2.CountryStat_;
 import com.zemlyak.web.segmentapp.model2.Segment;
@@ -23,6 +24,8 @@ public interface SegmentRepository extends JpaRepository<Segment, Integer>, JpaS
             "JOIN FETCH s.segmentType " +
             "WHERE s.segmentType.id = ?1")
     List<Segment> findByType(Integer typeId);
+
+    List<SegmentProjection> findByNameLike(String name);
 
     @Override
     @EntityGraph(attributePaths = {"dataProvider", "segmentType", "countryStats"})

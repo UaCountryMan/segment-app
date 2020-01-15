@@ -2,6 +2,7 @@ package com.zemlyak.web.segmentapp;
 
 import com.zemlyak.web.segmentapp.model.CountryStat;
 import com.zemlyak.web.segmentapp.model.CountryStat_;
+import com.zemlyak.web.segmentapp.model.SegmentProjection;
 import com.zemlyak.web.segmentapp.model.Segment_;
 import com.zemlyak.web.segmentapp.model2.Segment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ public class SegmentAppApplication  {
 	@GetMapping(path = "/segment/{id}")
 	public Segment findSegmentById(@PathVariable("id") Integer id) {
 		return segmentRepository.findById(id).orElse(null);
+	}
+
+	@GetMapping(path = "/segments/name/{name}")
+	public List<SegmentProjection> findSegmentById(@PathVariable("name") String name) {
+		return segmentRepository.findByNameLike("%" + name + "%");
 	}
 
 	@GetMapping(path = "/segments")
