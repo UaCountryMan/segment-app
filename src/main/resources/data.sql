@@ -18,3 +18,9 @@ insert into country_stats (segment_id, country_code) values (2, '');
 insert into country_stats (segment_id, country_code) values (2, 'US');
 insert into country_stats (segment_id, country_code) values (3, '');
 insert into country_stats (segment_id, country_code) values (3, 'US');
+
+insert into tracking_settings (id, metric_id) values (1, 5);
+insert into tracking_settings (id, metric_id) values (2, 19);
+
+
+insert into tracking_settings_internal (tracking_setting_id, distinction_type) values (2, 1);

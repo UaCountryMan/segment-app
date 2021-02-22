@@ -4,6 +4,7 @@ import com.zemlyak.web.segmentapp.model.CountryStat;
 import com.zemlyak.web.segmentapp.model.CountryStat_;
 import com.zemlyak.web.segmentapp.model.SegmentProjection;
 import com.zemlyak.web.segmentapp.model.Segment_;
+import com.zemlyak.web.segmentapp.model2.TrackingSetting;
 import com.zemlyak.web.segmentapp.model2.Segment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -29,6 +31,18 @@ public class SegmentAppApplication  {
 	@Autowired
 	private CountryStatsRepository statsRepository;
 
+	@Autowired
+	private TrackingSettingRepository trackingSettingRepository;
+
+	@GetMapping(path = "/settings/tracking")
+	public List<TrackingSetting> findAll() {
+		return trackingSettingRepository.findAll();
+	}
+
+	@GetMapping(path = "/settings/tracking/metric/{metricId}")
+	public List<TrackingSetting> findByMetricId(@PathVariable("metricId") Integer metricId) {
+		return trackingSettingRepository.findByMetricIdIn(Collections.singleton(metricId));
+	}
 
 
 	@GetMapping(path = "/segment/{id}")

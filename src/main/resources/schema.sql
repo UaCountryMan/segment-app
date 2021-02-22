@@ -24,3 +24,13 @@ create table country_stats (
     sleeping_profiles_amount bigint,
     PRIMARY KEY (segment_id,country_code)
 );
+
+create table tracking_settings (
+    id serial primary key,
+    metric_id integer not null
+);
+
+create table tracking_settings_internal (
+    tracking_setting_id integer not null references tracking_settings(id),
+    distinction_type integer
+);
