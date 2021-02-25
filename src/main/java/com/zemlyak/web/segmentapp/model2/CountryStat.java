@@ -2,6 +2,7 @@ package com.zemlyak.web.segmentapp.model2;
 
 import lombok.Data;
 import org.hibernate.annotations.SelectBeforeUpdate;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 @Table(name = "country_stats")
 @IdClass(CountryStat.Key.class)
 @SelectBeforeUpdate(value=false)
-public class CountryStat {
+public class CountryStat implements Persistable<CountryStat.Key> {
     @Transient
     private boolean isNew;
 
@@ -28,6 +29,16 @@ public class CountryStat {
 
     @Column(name = "sleeping_profiles_amount")
     private Long sleepingProfilesAmount;
+
+    @Override
+    public Key getId() {
+        return Key.fromStat(this);
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
 
     @Data
     public static class Key implements Serializable {

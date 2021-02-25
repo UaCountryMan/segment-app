@@ -68,13 +68,14 @@ public class SegmentAppApplication  {
 	@Transactional
 	@GetMapping(path = "/segment/{id}/stats/generate")
 	public Segment generateStats(@PathVariable("id") Integer id) {
+		Set<com.zemlyak.web.segmentapp.model2.CountryStat.Key> existedKeys = statsUpdateRepository.findAll().stream().map(com.zemlyak.web.segmentapp.model2.CountryStat::getId).collect(Collectors.toSet());
 		List<com.zemlyak.web.segmentapp.model2.CountryStat> generatedCountries = new ArrayList<>(200);
 		for (int i = 0; i < UPPER.length(); i++) {
 			for (int j = 0; j < UPPER.length(); j++) {
 				if (i == j) {
 					continue;
 				}
-				generatedCountries.add(statForCountryWithRandomValues(id,UPPER.charAt(i) + "" + UPPER.charAt(j)));
+				generatedCountries.add(statForCountryWithRandomValues(id,UPPER.charAt(i) + "" + UPPER.charAt(j), existedKeys));
 			}
 		}
 		statsUpdateRepository.saveAll(generatedCountries);
@@ -138,12 +139,13 @@ public class SegmentAppApplication  {
 		return CountryStatsRepository.SpecificationBuilder.forCountry(country);
 	}
 
-	private static com.zemlyak.web.segmentapp.model2.CountryStat statForCountryWithRandomValues(Integer id, String country) {
+	private static com.zemlyak.web.segmentapp.model2.CountryStat statForCountryWithRandomValues(Integer id, String country, Set<com.zemlyak.web.segmentapp.model2.CountryStat.Key> existedKeys) {
 		com.zemlyak.web.segmentapp.model2.CountryStat countryStat = new com.zemlyak.web.segmentapp.model2.CountryStat();
 		countryStat.setSegmentId(id);
 		countryStat.setCountryCode(country);
 		countryStat.setActiveProfilesAmount((long)RAND.nextInt(1000));
 		countryStat.setSleepingProfilesAmount((long)RAND.nextInt(1000));
+		countryStat.setNew(!existedKeys.contains(countryStat.getId()));
 		return countryStat;
 	}
 
