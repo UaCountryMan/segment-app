@@ -1,6 +1,7 @@
 package com.zemlyak.web.segmentapp.model2;
 
 import lombok.Data;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +10,10 @@ import java.io.Serializable;
 @Entity(name = "country_stats2")
 @Table(name = "country_stats")
 @IdClass(CountryStat.Key.class)
+@SelectBeforeUpdate(value=false)
 public class CountryStat {
+    @Transient
+    private boolean isNew;
 
     @Id
     @Column(name = "segment_id", insertable = false, updatable = false)
@@ -29,5 +33,12 @@ public class CountryStat {
     public static class Key implements Serializable {
         private Integer segmentId;
         private String countryCode;
+
+        public static Key fromStat(CountryStat stat) {
+            Key key = new Key();
+            key.setSegmentId(stat.getSegmentId());
+            key.setCountryCode(stat.getCountryCode());
+            return key;
+        }
     }
 }

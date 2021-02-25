@@ -17,13 +17,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @SpringBootApplication
 public class SegmentAppApplication  {
+	private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static final String SUM_STAT_BY_ALL_COUNTRIES_KEY = "";
+	private static final Random RAND = new Random(System.nanoTime());
 
 	@Autowired
 	private SegmentRepository segmentRepository;
@@ -33,6 +40,9 @@ public class SegmentAppApplication  {
 
 	@Autowired
 	private TrackingSettingRepository trackingSettingRepository;
+
+	@Autowired
+	private CountryStatsUpdateRepository statsUpdateRepository;
 
 	@GetMapping(path = "/settings/tracking")
 	public List<TrackingSetting> findAll() {
@@ -53,6 +63,22 @@ public class SegmentAppApplication  {
 	@GetMapping(path = "/segments/name/{name}")
 	public List<SegmentProjection> findSegmentById(@PathVariable("name") String name) {
 		return segmentRepository.findByNameLike("%" + name + "%");
+	}
+
+	@Transactional
+	@GetMapping(path = "/segment/{id}/stats/generate")
+	public Segment generateStats(@PathVariable("id") Integer id) {
+		List<com.zemlyak.web.segmentapp.model2.CountryStat> generatedCountries = new ArrayList<>(200);
+		for (int i = 0; i < UPPER.length(); i++) {
+			for (int j = 0; j < UPPER.length(); j++) {
+				if (i == j) {
+					continue;
+				}
+				generatedCountries.add(statForCountryWithRandomValues(id,UPPER.charAt(i) + "" + UPPER.charAt(j)));
+			}
+		}
+		statsUpdateRepository.saveAll(generatedCountries);
+		return findSegmentById(id);
 	}
 
 	@GetMapping(path = "/segments")
@@ -110,6 +136,15 @@ public class SegmentAppApplication  {
 
 	private static CountryStatsRepository.SpecificationBuilder conditionBuilder(String country) {
 		return CountryStatsRepository.SpecificationBuilder.forCountry(country);
+	}
+
+	private static com.zemlyak.web.segmentapp.model2.CountryStat statForCountryWithRandomValues(Integer id, String country) {
+		com.zemlyak.web.segmentapp.model2.CountryStat countryStat = new com.zemlyak.web.segmentapp.model2.CountryStat();
+		countryStat.setSegmentId(id);
+		countryStat.setCountryCode(country);
+		countryStat.setActiveProfilesAmount((long)RAND.nextInt(1000));
+		countryStat.setSleepingProfilesAmount((long)RAND.nextInt(1000));
+		return countryStat;
 	}
 
 
