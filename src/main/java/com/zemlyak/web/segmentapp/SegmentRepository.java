@@ -12,8 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.ListJoin;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.ListJoin;
 import java.util.List;
 
 public interface SegmentRepository extends JpaRepository<Segment, Integer>, JpaSpecificationExecutor<Segment> {

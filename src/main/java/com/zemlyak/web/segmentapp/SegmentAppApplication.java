@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -125,7 +125,7 @@ public class SegmentAppApplication  {
 			return statsRepository.findAll(conditionBuilder.build());
 		} else {
 			return statsRepository
-				.findAll(conditionBuilder.build(), PageRequest.of(0, 2, new JpaSort(Sort.Direction.ASC, JpaSort.path(CountryStat_.segment).dot(Segment_.id))))
+				.findAll(conditionBuilder.build(), PageRequest.of(0, 2, JpaSort.of(Sort.Direction.ASC, JpaSort.path(CountryStat_.segment).dot(Segment_.id))))
 				.getContent();
 		}
 	}

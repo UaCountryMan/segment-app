@@ -1,13 +1,27 @@
 package com.zemlyak.web.segmentapp.model2;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.io.Serializable;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity(name = "country_stats2")
 @Table(name = "country_stats")
 @IdClass(CountryStat.Key.class)
@@ -51,5 +65,22 @@ public class CountryStat implements Persistable<CountryStat.Key> {
             key.setCountryCode(stat.getCountryCode());
             return key;
         }
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        CountryStat that = (CountryStat) o;
+        return getSegmentId() != null && Objects.equals(getSegmentId(), that.getSegmentId())
+                && getCountryCode() != null && Objects.equals(getCountryCode(), that.getCountryCode());
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(segmentId, countryCode);
     }
 }
