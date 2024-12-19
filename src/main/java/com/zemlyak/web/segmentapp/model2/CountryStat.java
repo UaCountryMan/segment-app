@@ -2,7 +2,7 @@ package com.zemlyak.web.segmentapp.model2;
 
 import lombok.Data;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SelectBeforeUpdate;
@@ -21,7 +21,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity(name = "country_stats2")
 @Table(name = "country_stats")
 @IdClass(CountryStat.Key.class)
@@ -52,6 +52,13 @@ public class CountryStat implements Persistable<CountryStat.Key> {
     @Override
     public boolean isNew() {
         return isNew;
+    }
+
+    public CountryStat(Integer segmentId, String countryCode, Long activeProfilesAmount, Long sleepingProfilesAmount) {
+        this.segmentId = segmentId;
+        this.countryCode = countryCode;
+        this.activeProfilesAmount = activeProfilesAmount;
+        this.sleepingProfilesAmount = sleepingProfilesAmount;
     }
 
     @Data

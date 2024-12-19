@@ -1,7 +1,7 @@
 package com.zemlyak.web.segmentapp.model;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
@@ -15,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "data_providers")
 public class DataProvider {
@@ -25,6 +25,12 @@ public class DataProvider {
 
     @Column(name = "name")
     private String name;
+
+    public DataProvider(Integer id, String name) {
+        this();
+        this.id = id;
+        this.name = name;
+    }
 
     @Override
     public final boolean equals(Object o) {

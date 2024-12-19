@@ -82,6 +82,14 @@ public class SegmentAppApplication  {
 		return findSegmentById(id);
 	}
 
+	@GetMapping(path = "/segments_compatible")
+	public List<Segment> findSegmentOriginal() {
+		return segmentRepository
+				.findAllOriginal(SegmentRepository
+						.withCountryStat("")
+						.and(SegmentRepository.hasType(1)));
+	}
+
 	@GetMapping(path = "/segments")
 	public List<Segment> findSegment() {
 		return segmentRepository

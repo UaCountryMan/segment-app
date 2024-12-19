@@ -1,7 +1,7 @@
 package com.zemlyak.web.segmentapp.model;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
@@ -15,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "segment_types")
 public class SegmentType {
@@ -29,6 +29,13 @@ public class SegmentType {
 
     @Column(name = "view_name")
     private String viewName;
+
+    public SegmentType(Integer id, String name, String viewName) {
+        this();
+        this.id = id;
+        this.name = name;
+        this.viewName = viewName;
+    }
 
     @Override
     public final boolean equals(Object o) {

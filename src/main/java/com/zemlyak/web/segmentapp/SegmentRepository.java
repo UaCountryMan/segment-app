@@ -16,7 +16,7 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.ListJoin;
 import java.util.List;
 
-public interface SegmentRepository extends JpaRepository<Segment, Integer>, JpaSpecificationExecutor<Segment> {
+public interface SegmentRepository extends JpaRepository<Segment, Integer>, JpaSpecificationExecutor<Segment>, SegmentSpecificationOriginalExecutor {
 
     @Query(
         "SELECT s FROM Segment s " +
