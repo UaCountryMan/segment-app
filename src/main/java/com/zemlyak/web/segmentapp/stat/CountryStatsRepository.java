@@ -1,13 +1,9 @@
-package com.zemlyak.web.segmentapp;
+package com.zemlyak.web.segmentapp.stat;
 
-import com.zemlyak.web.segmentapp.model.CountryStat;
-import com.zemlyak.web.segmentapp.model.CountryStat_;
-import com.zemlyak.web.segmentapp.model.DataProvider;
-import com.zemlyak.web.segmentapp.model.DataProvider_;
-import com.zemlyak.web.segmentapp.model.Segment;
-import com.zemlyak.web.segmentapp.model.SegmentType;
-import com.zemlyak.web.segmentapp.model.SegmentType_;
-import com.zemlyak.web.segmentapp.model.Segment_;
+import com.zemlyak.web.segmentapp.common.DataProvider;
+import com.zemlyak.web.segmentapp.common.DataProvider_;
+import com.zemlyak.web.segmentapp.common.SegmentType;
+import com.zemlyak.web.segmentapp.common.SegmentType_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,12 +11,12 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Path;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Objects;
 

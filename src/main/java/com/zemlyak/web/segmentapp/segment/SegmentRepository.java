@@ -1,22 +1,18 @@
-package com.zemlyak.web.segmentapp;
+package com.zemlyak.web.segmentapp.segment;
 
-import com.zemlyak.web.segmentapp.model.SegmentProjection;
-import com.zemlyak.web.segmentapp.model2.CountryStat;
-import com.zemlyak.web.segmentapp.model2.CountryStat_;
-import com.zemlyak.web.segmentapp.model2.Segment;
-import com.zemlyak.web.segmentapp.model.SegmentType_;
-import com.zemlyak.web.segmentapp.model2.Segment_;
+import com.zemlyak.web.segmentapp.stat.SegmentProjection;
+import com.zemlyak.web.segmentapp.common.SegmentType_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.ListJoin;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.ListJoin;
 import java.util.List;
 
-public interface SegmentRepository extends JpaRepository<Segment, Integer>, JpaSpecificationExecutor<Segment> {
+public interface SegmentRepository extends JpaRepository<Segment, Integer>, JpaSpecificationExecutor<Segment>, SegmentSpecificationOriginalExecutor {
 
     @Query(
         "SELECT s FROM Segment s " +

@@ -1,6 +1,5 @@
-package com.zemlyak.web.segmentapp;
+package com.zemlyak.web.segmentapp.tracking;
 
-import com.zemlyak.web.segmentapp.model2.TrackingSetting;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

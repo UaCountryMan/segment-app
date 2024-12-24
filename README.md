@@ -1,35 +1,40 @@
 ### Case 1:
 
+Default country statistic for segment. No possibility to get segment which has no statistic by specific country. 
+
 Request 
-`http://localhost:8080/segments/stats?typeId=1&dataProviderId=1`
+`http://localhost:8080/country-statistics?typeId=1&dataProviderId=1`
 
 Will generate SQL:
 ```sql
     select
-        countrysta0_.country_code as country_1_0_0_,
-        countrysta0_.segment_id as segment_2_0_0_,
-        segment3_.id as id1_3_1_,
-        dataprovid4_.id as id1_1_2_,
-        segmenttyp5_.id as id1_2_3_,
-        countrysta0_.active_profiles_amount as active_p3_0_0_,
-        countrysta0_.sleeping_profiles_amount as sleeping4_0_0_,
-        segment3_.is_active as is_activ2_3_1_,
-        segment3_.data_provider as data_pro4_3_1_,
-        segment3_.name as name3_3_1_,
-        segment3_.type_id as type_id5_3_1_,
-        dataprovid4_.name as name2_1_2_,
-        segmenttyp5_.name as name2_2_3_,
-        segmenttyp5_.view_name as view_nam3_2_3_ 
-    from country_stats countrysta0_ 
-    left outer join segments segment3_ on countrysta0_.segment_id=segment3_.id 
-    left outer join data_providers dataprovid4_ on segment3_.data_provider=dataprovid4_.id 
-    left outer join segment_types segmenttyp5_ on segment3_.type_id=segmenttyp5_.id 
-    cross join segments segment1_ 
+        cs1_0.country_code,
+        cs1_0.segment_id,
+        cs1_0.active_profiles_amount,
+        s1_0.id,
+        s1_0.is_active,
+        dp1_0.id,
+        dp1_0.name,
+        s1_0.name,
+        st1_0.id,
+        st1_0.name,
+        st1_0.view_name,
+        cs1_0.sleeping_profiles_amount
+    from
+        country_stats cs1_0
+    left join
+        segments s1_0
+            on s1_0.id=cs1_0.segment_id
+    left join
+        data_providers dp1_0
+            on dp1_0.id=s1_0.data_provider
+    left join
+        segment_types st1_0
+            on st1_0.id=s1_0.type_id
     where
-        countrysta0_.segment_id=segment1_.id 
-        and segment1_.type_id=1 
-        and segment1_.data_provider=1 
-        and countrysta0_.country_code=?
+      cs1_0.country_code=?
+      and s1_0.data_provider=?
+      and s1_0.type_id=?
 ```
 
 And return:
@@ -60,50 +65,59 @@ And return:
 
 ### Case 2:
 
+Default country statistic for segment with ability to search by concatenated columns.
+
+A lot of duplicated joins. Is there any chance to remove them?
+
 Request 
-`http://localhost:8080/segments/stats?search=ment3`
+`http://localhost:8080/country-statistics?search=ment3`
 
 Will generate SQL:
 ```sql
     select
-            countrysta0_.country_code as country_1_0_0_,
-            countrysta0_.segment_id as segment_2_0_0_,
-            segment1_.id as id1_3_1_,
-            dataprovid2_.id as id1_1_2_,
-            segmenttyp3_.id as id1_2_3_,
-            countrysta0_.active_profiles_amount as active_p3_0_0_,
-            countrysta0_.sleeping_profiles_amount as sleeping4_0_0_,
-            segment1_.is_active as is_activ2_3_1_,
-            segment1_.data_provider as data_pro4_3_1_,
-            segment1_.name as name3_3_1_,
-            segment1_.type_id as type_id5_3_1_,
-            dataprovid2_.name as name2_1_2_,
-            segmenttyp3_.name as name2_2_3_,
-            segmenttyp3_.view_name as view_nam3_2_3_ 
-        from
-            country_stats countrysta0_ 
-        left outer join
-            segments segment1_ 
-                on countrysta0_.segment_id=segment1_.id 
-        left outer join
-            data_providers dataprovid2_ 
-                on segment1_.data_provider=dataprovid2_.id 
-        left outer join
-            segment_types segmenttyp3_ 
-                on segment1_.type_id=segmenttyp3_.id 
-        where
-            (
-                (
-                    (
-                        (
-                            dataprovid2_.name||?
-                        )||(
-                            segmenttyp3_.view_name||?
-                        )
-                    )||segment1_.name
-                ) like ?
-            ) 
-            and countrysta0_.country_code=?
+        cs1_0.country_code,
+        cs1_0.segment_id,
+        cs1_0.active_profiles_amount,
+        s2_0.id,
+        s2_0.is_active,
+        dp2_0.id,
+        dp2_0.name,
+        s2_0.name,
+        st2_0.id,
+        st2_0.name,
+        st2_0.view_name,
+        cs1_0.sleeping_profiles_amount
+    from
+        country_stats cs1_0
+    left join
+        segments s1_0
+            on s1_0.id=cs1_0.segment_id
+    left join
+        data_providers dp1_0
+            on dp1_0.id=s1_0.data_provider
+    left join
+        segment_types st1_0
+            on st1_0.id=s1_0.type_id
+    left join
+        segments s2_0
+            on s2_0.id=cs1_0.segment_id
+    left join
+        data_providers dp2_0
+            on dp2_0.id=s2_0.data_provider
+    left join
+        segment_types st2_0
+            on st2_0.id=s2_0.type_id
+    where
+        cs1_0.country_code=?
+      and (
+              (
+                  (
+                      dp1_0.name||?
+                      )||(
+                      st1_0.view_name||?
+                      )
+                  )||s1_0.name
+              ) like ? escape ''
 ```
 
 And return:
@@ -134,47 +148,40 @@ And return:
 
 ### Case 3:
 
+Segment with single country statistic fetched using Criteria API. Should return statistic only by requested country.
+
 Request 
 `http://localhost:8080/segments`
 
 Will generate SQL:
 ```sql
     select
-        segment0_.id as id1_3_0_,
-        countrysta1_.country_code as country_1_0_1_,
-        countrysta1_.segment_id as segment_2_0_1_,
-        segmenttyp2_.id as id1_2_2_,
-        dataprovid3_.id as id1_1_3_,
-        segment0_.is_active as is_activ2_3_0_,
-        segment0_.data_provider as data_pro4_3_0_,
-        segment0_.name as name3_3_0_,
-        segment0_.type_id as type_id5_3_0_,
-        countrysta1_.active_profiles_amount as active_p3_0_1_,
-        countrysta1_.sleeping_profiles_amount as sleeping4_0_1_,
-        countrysta1_.segment_id as segment_2_0_0__,
-        countrysta1_.country_code as country_1_0_0__,
-        segmenttyp2_.name as name2_2_2_,
-        segmenttyp2_.view_name as view_nam3_2_2_,
-        dataprovid3_.name as name2_1_3_ 
+        s1_0.id,
+        s1_0.name,
+        s1_0.is_active,
+        s1_0.data_provider,
+        dp1_0.name,
+        s1_0.type_id,
+        st1_0.name,
+        st1_0.view_name,
+        cs1_0.country_code,
+        cs1_0.active_profiles_amount,
+        cs1_0.sleeping_profiles_amount
     from
-        segments segment0_ 
-    left outer join
-        country_stats countrysta1_ 
-            on segment0_.id=countrysta1_.segment_id 
-            and (
-                countrysta1_.country_code=?
-            ) 
-    left outer join
-        segment_types segmenttyp2_ 
-            on segment0_.type_id=segmenttyp2_.id 
-    left outer join
-        data_providers dataprovid3_ 
-            on segment0_.data_provider=dataprovid3_.id 
+        segments s1_0
+    left join
+        country_stats cs1_0
+            on s1_0.id=cs1_0.segment_id
+            and cs1_0.country_code=?
+    join
+        data_providers dp1_0
+            on dp1_0.id=s1_0.data_provider
+    join
+        segment_types st1_0
+            on st1_0.id=s1_0.type_id
     where
-        segment0_.type_id=1 
-        and (
-            segment0_.id is not null
-        )
+        s1_0.id is not null
+        and s1_0.type_id=?
 ```
 
 And return:
@@ -198,58 +205,153 @@ And return:
             "segmentId":2,
             "countryCode":"",
             "activeProfilesAmount":null,
-            "sleepingProfilesAmount":null
+            "sleepingProfilesAmount":null,
+            "id": {
+                "segmentId": 2,
+                "countryCode": ""
+            },
+            "new": false
          }
       ]
    }
 ]
 ```
 
-### Ordering:
+### Case 4:
 
-Request 
-`http://localhost:8080/segments/stats`
+Segment with single country statistic specification fetched using graph and JpaSpecificationExecutor
+
+Unexpected behaviour. There is additional join on country_stats and return statistic for all countries by segment
+
+Request
+`http://localhost:8080/segments?jpa-repo=true`
 
 Will generate SQL:
 ```sql
     select
-        countrysta0_.country_code as country_1_0_0_,
-        countrysta0_.segment_id as segment_2_0_0_,
-        segment1_.id as id1_3_1_,
-        dataprovid2_.id as id1_1_2_,
-        segmenttyp3_.id as id1_2_3_,
-        countrysta0_.active_profiles_amount as active_p3_0_0_,
-        countrysta0_.sleeping_profiles_amount as sleeping4_0_0_,
-        segment1_.is_active as is_activ2_3_1_,
-        segment1_.data_provider as data_pro4_3_1_,
-        segment1_.name as name3_3_1_,
-        segment1_.type_id as type_id5_3_1_,
-        dataprovid2_.name as name2_1_2_,
-        segmenttyp3_.name as name2_2_3_,
-        segmenttyp3_.view_name as view_nam3_2_3_ 
+        s1_0.id,
+        s1_0.is_active,
+        cs2_0.segment_id,
+        cs2_0.country_code,
+        cs2_0.active_profiles_amount,
+        cs2_0.sleeping_profiles_amount,
+        dp1_0.id,
+        dp1_0.name,
+        s1_0.name,
+        st1_0.id,
+        st1_0.name,
+        st1_0.view_name
     from
-        country_stats countrysta0_ 
-    left outer join
-        segments segment1_ 
-            on countrysta0_.segment_id=segment1_.id 
-    left outer join
-        data_providers dataprovid2_ 
-            on segment1_.data_provider=dataprovid2_.id 
-    left outer join
-        segment_types segmenttyp3_ 
-            on segment1_.type_id=segmenttyp3_.id 
+        segments s1_0
+    left join
+        country_stats cs1_0
+            on s1_0.id=cs1_0.segment_id
+            and cs1_0.country_code=?
+    left join
+        country_stats cs2_0
+            on s1_0.id=cs2_0.segment_id
+    left join
+        data_providers dp1_0
+            on dp1_0.id=s1_0.data_provider
+    left join
+        segment_types st1_0
+            on st1_0.id=s1_0.type_id
     where
-        countrysta0_.country_code=? 
+        s1_0.id is not null
+        and s1_0.type_id=?
+```
+
+And return:
+```json
+[
+  {
+    "id": 2,
+    "name": "Segment2",
+    "active": null,
+    "dataProvider": {
+      "id": 1,
+      "name": "Spring"
+    },
+    "segmentType": {
+      "id": 1,
+      "name": "brand",
+      "viewName": "Brand"
+    },
+    "countryStats": [
+      {
+        "segmentId": 2,
+        "countryCode": "",
+        "activeProfilesAmount": null,
+        "sleepingProfilesAmount": null,
+        "id": {
+          "segmentId": 2,
+          "countryCode": ""
+        },
+        "new": false
+      },
+      {
+        "segmentId": 2,
+        "countryCode": "US",
+        "activeProfilesAmount": null,
+        "sleepingProfilesAmount": null,
+        "id": {
+          "segmentId": 2,
+          "countryCode": "US"
+        },
+        "new": false
+      }
+    ]
+  }
+]
+```
+
+### Ordering:
+
+Request 
+`http://localhost:8080/country-statistics`
+
+Will generate SQL:
+```sql
+    select
+        cs1_0.country_code,
+        cs1_0.segment_id,
+        cs1_0.active_profiles_amount,
+        s1_0.id,
+        s1_0.is_active,
+        dp1_0.id,
+        dp1_0.name,
+        s1_0.name,
+        st1_0.id,
+        st1_0.name,
+        st1_0.view_name,
+        cs1_0.sleeping_profiles_amount
+    from
+        country_stats cs1_0
+    left join
+        segments s1_0
+            on s1_0.id=cs1_0.segment_id
+    left join
+        data_providers dp1_0
+            on dp1_0.id=s1_0.data_provider
+    left join
+        segment_types st1_0
+            on st1_0.id=s1_0.type_id
+    where
+        cs1_0.country_code=?
     order by
-        segment1_.id asc limit ?;
+        s1_0.id
+    offset
+        ? rows
+    fetch
+        first ? rows only;
 
 
     select
-        count(*) as col_0_0_ 
+        count(*)
     from
-        country_stats countrysta0_ 
+        country_stats cs1_0
     where
-        countrysta0_.country_code=?;
+        cs1_0.country_code=?;
 ```
 
 And return:
@@ -303,7 +405,7 @@ And return:
 Projection DTO
 
 ```java
-@Value
+@Data
 public class SegmentProjection {
     private final Integer id;
     private final String name;
@@ -321,10 +423,10 @@ public interface SegmentRepository extends JpaRepository<Segment, Integer> {
 Query
 ```sql
     select
-        segment0_.id as col_0_0_,
-        segment0_.name as col_1_0_ 
+        s1_0.id,
+        s1_0.name
     from
-        segments segment0_ 
+        segments s1_0
     where
-        segment0_.name like ? escape ?
+        s1_0.name like ? escape '\'
 ```

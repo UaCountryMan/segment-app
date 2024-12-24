@@ -1,8 +1,8 @@
-package com.zemlyak.web.segmentapp.model;
+package com.zemlyak.web.segmentapp.stat;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class SegmentProjection {
     private final Integer id;
     private final String name;
