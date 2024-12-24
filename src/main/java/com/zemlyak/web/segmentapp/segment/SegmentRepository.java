@@ -1,11 +1,7 @@
-package com.zemlyak.web.segmentapp;
+package com.zemlyak.web.segmentapp.segment;
 
-import com.zemlyak.web.segmentapp.model.SegmentProjection;
-import com.zemlyak.web.segmentapp.model2.CountryStat;
-import com.zemlyak.web.segmentapp.model2.CountryStat_;
-import com.zemlyak.web.segmentapp.model2.Segment;
-import com.zemlyak.web.segmentapp.model.SegmentType_;
-import com.zemlyak.web.segmentapp.model2.Segment_;
+import com.zemlyak.web.segmentapp.stat.SegmentProjection;
+import com.zemlyak.web.segmentapp.common.SegmentType_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

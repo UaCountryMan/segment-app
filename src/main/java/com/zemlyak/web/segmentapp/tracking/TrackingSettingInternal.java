@@ -1,4 +1,4 @@
-package com.zemlyak.web.segmentapp.model2;
+package com.zemlyak.web.segmentapp.tracking;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

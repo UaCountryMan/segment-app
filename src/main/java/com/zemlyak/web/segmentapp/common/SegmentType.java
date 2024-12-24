@@ -1,7 +1,7 @@
-package com.zemlyak.web.segmentapp.model2;
+package com.zemlyak.web.segmentapp.common;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
@@ -9,40 +9,47 @@ import org.hibernate.proxy.HibernateProxy;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "tracking_settings")
-@Inheritance(strategy = InheritanceType.JOINED)
-public class TrackingSetting {
+@Table(name = "segment_types")
+public class SegmentType {
 
     @Id
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "metric_id")
-    private Integer metricId;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "view_name")
+    private String viewName;
+
+    public SegmentType(Integer id, String name, String viewName) {
+        this();
+        this.id = id;
+        this.name = name;
+        this.viewName = viewName;
+    }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        TrackingSetting that = (TrackingSetting) o;
+        SegmentType that = (SegmentType) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

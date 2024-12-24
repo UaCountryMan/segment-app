@@ -1,7 +1,7 @@
-package com.zemlyak.web.segmentapp.model2;
+package com.zemlyak.web.segmentapp.segment;
 
-import com.zemlyak.web.segmentapp.model.DataProvider;
-import com.zemlyak.web.segmentapp.model.SegmentType;
+import com.zemlyak.web.segmentapp.common.DataProvider;
+import com.zemlyak.web.segmentapp.common.SegmentType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

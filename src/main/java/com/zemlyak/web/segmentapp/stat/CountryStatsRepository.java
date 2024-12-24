@@ -1,13 +1,9 @@
-package com.zemlyak.web.segmentapp;
+package com.zemlyak.web.segmentapp.stat;
 
-import com.zemlyak.web.segmentapp.model.CountryStat;
-import com.zemlyak.web.segmentapp.model.CountryStat_;
-import com.zemlyak.web.segmentapp.model.DataProvider;
-import com.zemlyak.web.segmentapp.model.DataProvider_;
-import com.zemlyak.web.segmentapp.model.Segment;
-import com.zemlyak.web.segmentapp.model.SegmentType;
-import com.zemlyak.web.segmentapp.model.SegmentType_;
-import com.zemlyak.web.segmentapp.model.Segment_;
+import com.zemlyak.web.segmentapp.common.DataProvider;
+import com.zemlyak.web.segmentapp.common.DataProvider_;
+import com.zemlyak.web.segmentapp.common.SegmentType;
+import com.zemlyak.web.segmentapp.common.SegmentType_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

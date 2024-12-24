@@ -72,9 +72,6 @@
 				<configuration>
 					<source>21</source>
 					<target>21</target>
-<!--					<compilerArguments>-->
-<!--						<processor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</processor>-->
-<!--					</compilerArguments>-->
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>

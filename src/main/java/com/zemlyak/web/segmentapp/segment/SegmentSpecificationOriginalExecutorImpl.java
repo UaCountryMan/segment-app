@@ -1,10 +1,7 @@
-package com.zemlyak.web.segmentapp;
+package com.zemlyak.web.segmentapp.segment;
 
-import com.zemlyak.web.segmentapp.model.DataProvider_;
-import com.zemlyak.web.segmentapp.model.SegmentType_;
-import com.zemlyak.web.segmentapp.model2.CountryStat_;
-import com.zemlyak.web.segmentapp.model2.Segment;
-import com.zemlyak.web.segmentapp.model2.Segment_;
+import com.zemlyak.web.segmentapp.common.DataProvider_;
+import com.zemlyak.web.segmentapp.common.SegmentType_;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;

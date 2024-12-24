@@ -1,6 +1,5 @@
-package com.zemlyak.web.segmentapp;
+package com.zemlyak.web.segmentapp.segment;
 
-import com.zemlyak.web.segmentapp.model2.Segment;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;

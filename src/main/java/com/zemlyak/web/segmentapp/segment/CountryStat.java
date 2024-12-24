@@ -1,4 +1,4 @@
-package com.zemlyak.web.segmentapp.model2;
+package com.zemlyak.web.segmentapp.segment;
 
 import lombok.Data;
 import lombok.Getter;
